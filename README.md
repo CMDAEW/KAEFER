@@ -1,2 +1,2 @@
 # kaefer
-My first work repository
+My first work repository for KAEFER Industrie GmbH
