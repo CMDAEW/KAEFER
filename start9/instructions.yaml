@@ -1,0 +1,6 @@
+instructions:
+  install:
+    - description: "Building Docker image for Invoicing App"
+      command: "docker build -t invoicing-app ."
+    - description: "Running Invoicing App"
+      command: "docker run -d -p 5000:5000 invoicing-app"

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Arbeitsbescheinigung</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        td, th {
+            padding: 5px;
+            border: 1px solid #000;
+        }
+        .header, .footer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .footer {
+            font-size: 10px;
+        }
+        .details td {
+            border: none;
+        }
+        .summary {
+            text-align: right;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            Erstellung von Arbeitsbescheinigung
+        </div>
+        <table class="details">
+            <tr>
+                <td colspan="2">Name: {{ name }}</td>
+                <td>Erstelld.: {{ erstellt_am }}</td>
+            </tr>
+            <tr>
+                <td>Rahmenvertrags-Nr.: {{ rahmenvertrags_nr }}</td>
+                <td>KAEFER Auftrags-Nr.: {{ auftrags_nr }}</td>
+                <td>Seite: {{ seite }}</td>
+            </tr>
+            <tr>
+                <td>Projekt: {{ projekt }}</td>
+                <td>KW: {{ kw }}</td>
+                <td>Telefon: {{ telefon }}</td>
+            </tr>
+            <tr>
+                <td>Baustelle: {{ baustelle }}</td>
+                <td>Telefax: {{ telefax }}</td>
+                <td>Arbeits-Bescheinigung Nr.: {{ arb_besch_nr }}</td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Ges. Std.</th>
+                <th>EUR/Std.</th>
+                <th>So</th>
+                <th>Mo</th>
+                <th>Di</th>
+                <th>Mi</th>
+                <th>Do</th>
+                <th>Fr</th>
+                <th>Sa</th>
+                <th>Ü-Std</th>
+                <th>Nacht</th>
+                <th>Sonn-tag</th>
+                <th>Feier-tag</th>
+                <th>Summe [€]</th>
+            </tr>
+            <tr>
+                <td>Herr Flämmich</td>
+                <td>11,0</td>
+                <td>69,00</td>
+                <td>11,0</td>
+                <td>0,0</td>
+                <td>0,0</td>
+                <td>0,0</td>
+                <td>0,0</td>
+                <td>0,0</td>
+                <td>0,0</td>
+                <td>11,0</td>
+                <td>0,0</td>
+                <td>11,0</td>
+                <td>0,0</td>
+                <td>759,00</td>
+            </tr>
+        </table>
+        <div class="summary">
+            Summe Lohn: 759,00 €
+        </div>
+        <div class="summary">
+            Summe: 759,00 €
+        </div>
+        <table class="details">
+            <tr>
+                <td>Die Richtigkeit bescheinigt</td>
+                <td>für Auftraggeber</td>
+            </tr>
+            <tr>
+                <td>Ort: {{ ort }}</td>
+                <td>für KAEFER</td>
+            </tr>
+            <tr>
+                <td>Datum: {{ datum }}</td>
+            </tr>
+        </table>
+        <div class="footer">
+            Ver.: 01.01.00
+        </div>
+    </div>
+</body>
+</html>

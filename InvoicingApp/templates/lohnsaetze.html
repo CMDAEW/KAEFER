@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+
+{% block title %}Lohnsaetze Pflegen{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Lohnsätze pflegen</h1>
+    <form id="lohnsaetzeForm" method="post" class="mb-5">
+        {{ form.hidden_tag() }}
+        <input type="hidden" name="lohnsaetze_id" id="lohnsaetze_id" value="{{ lohnsaetze.Id if lohnsaetze else '' }}">
+
+        <div class="form-group">
+            {{ form.kraftwerk_id.label(class="form-label") }}
+            {{ form.kraftwerk_id(id="form_kraftwerk_id", class="form-control", onchange="toggleNewKraftwerkField(this.value); updateLohnsaetzeTable(this.value);") }}
+            {% if form.kraftwerk_id.errors %}
+                <div class="invalid-feedback">
+                    {{ form.kraftwerk_id.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group" id="new_kraftwerk_name_group" style="display: none;">
+            {{ form.new_kraftwerk_name.label(class="form-label") }}
+            {{ form.new_kraftwerk_name(id="form_new_kraftwerk_name", class="form-control") }}
+            {% if form.new_kraftwerk_name.errors %}
+                <div class="invalid-feedback">
+                    {{ form.new_kraftwerk_name.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.lohnart.label(class="form-label") }}
+            {{ form.lohnart(id="form_lohnart", class="form-control") }}
+            {% if form.lohnart.errors %}
+                <div class="invalid-feedback">
+                    {{ form.lohnart.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.std_satz.label(class="form-label") }}
+            {{ form.std_satz(id="form_std_satz", class="form-control" if not form.std_satz.errors else "form-control is-invalid", value=form.std_satz.data.replace('.', ',') if form.std_satz.data else '') }}
+            {% if form.std_satz.errors %}
+                <div class="invalid-feedback">
+                    {{ form.std_satz.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.basis_satz.label(class="form-label") }}
+            {{ form.basis_satz(id="form_basis_satz", class="form-control" if not form.basis_satz.errors else "form-control is-invalid", value=form.basis_satz.data.replace('.', ',') if form.basis_satz.data else '') }}
+            {% if form.basis_satz.errors %}
+                <div class="invalid-feedback">
+                    {{ form.basis_satz.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.bezeichnung.label(class="form-label") }}
+            {{ form.bezeichnung(id="form_bezeichnung", class="form-control" if not form.bezeichnung.errors else "form-control is-invalid") }}
+            {% if form.bezeichnung.errors %}
+                <div class="invalid-feedback">
+                    {{ form.bezeichnung.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" id="createButton">Create</button>
+            <button type="submit" class="btn btn-warning" id="editButton" style="display: none;">Save</button>
+            <button type="button" class="btn btn-danger" id="deleteButton" style="display: none;" onclick="deleteLohnsaetze()">Delete</button>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <div id="clickToEditMessage" class="alert alert-info">
+            Bitte klicken Sie auf eine Zeile, um die Lohnsaetze zu bearbeiten.
+        </div>
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Kraftwerk / TRV</th>
+                    <th>lohnart</th>
+                    <th>VKP EUR/h</th>
+                    <th>Basis EUR/h</th>
+                    <th>Bezeichnung</th>
+                    <th>Angelegt durch</th>
+                </tr>
+            </thead>
+            <tbody id="lohnsaetze-table-body">
+                {% for lohnsaetze in lohnsaetze_entries %}
+                <tr class="clickable-row" data-lohnsaetze='{{ lohnsaetze|tojson }}'>
+                    <td>{{ lohnsaetze.kraftwerk_id }}</td>
+                    <td>{{ lohnsaetze.lohnart }}</td>
+                    <td>{{ lohnsaetze.std_satz.replace('.', ',') }}</td>
+                    <td>{{ lohnsaetze.basis_satz.replace('.', ',') }}</td>
+                    <td>{{ lohnsaetze.bezeichnung }}</td>
+                    <td>{{ lohnsaetze.angelegt_durch }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+    const kraftwerkSelect = document.getElementById('form_kraftwerk_id');
+    const lohnsaetzeForm = document.getElementById('lohnsaetzeForm');
+
+    kraftwerkSelect.addEventListener('change', function() {
+        toggleNewKraftwerkField(this.value);
+        updateLohnsaetzeTable(this.value);
+    });
+
+    lohnsaetzeForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+        const selectedKraftwerk = kraftwerkSelect.value;
+
+        fetch('/lohnsaetze', {
+            method: 'POST',
+            body: new FormData(lohnsaetzeForm)
+        }).then(response => {
+            return response.text();
+        }).then(html => {
+            document.documentElement.innerHTML = html;
+            kraftwerkSelect.value = selectedKraftwerk;
+            updateLohnsaetzeTable(selectedKraftwerk);
+        });
+    });
+
+    updateLohnsaetzeTable(kraftwerkSelect.value);
+
+    const rows = document.querySelectorAll('.clickable-row');
+    rows.forEach(row => {
+        row.addEventListener('click', function() {
+            const lohnsaetze = JSON.parse(this.getAttribute('data-lohnsaetze'));
+            selectLohnsaetze(lohnsaetze);
+        });
+    });
+});
+
+function toggleNewKraftwerkField(value) {
+    const newKraftwerkField = document.getElementById('new_kraftwerk_name_group');
+    if (value === 'new_entry') {
+        newKraftwerkField.style.display = 'block';
+    } else {
+        newKraftwerkField.style.display = 'none';
+    }
+}
+
+function updateLohnsaetzeTable(kraftwerkId) {
+    fetch(`/get_lohnsaetze/${kraftwerkId}`)
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('lohnsaetze-table-body');
+            tableBody.innerHTML = ''; // Clear current rows
+
+            data.forEach(lohnsaetze => {
+                const row = document.createElement('tr');
+                row.classList.add('clickable-row');
+                row.setAttribute('data-lohnsaetze', JSON.stringify(lohnsaetze));
+                row.innerHTML = `
+                    <td>${lohnsaetze.kraftwerk_id}</td>
+                    <td>${lohnsaetze.lohnart}</td>
+                    <td>${lohnsaetze.std_satz}</td>
+                    <td>${lohnsaetze.basis_satz}</td>
+                    <td>${lohnsaetze.bezeichnung}</td>
+                    <td>${lohnsaetze.angelegt_durch}</td>
+                `;
+                row.addEventListener('click', function() {
+                    selectLohnsaetze(lohnsaetze);
+                });
+                tableBody.appendChild(row);
+            });
+        });
+}
+
+function selectLohnsaetze(lohnsaetze) {
+    document.getElementById('lohnsaetze_id').value = lohnsaetze.Id;
+    document.getElementById('form_kraftwerk_id').value = lohnsaetze.kraftwerk_id;
+    document.getElementById('form_lohnart').value = lohnsaetze.lohnart;
+    document.getElementById('form_std_satz').value = formatEuro(lohnsaetze.std_satz);
+    document.getElementById('form_basis_satz').value = formatEuro(lohnsaetze.basis_satz);
+    document.getElementById('form_bezeichnung').value = lohnsaetze.bezeichnung;
+
+    document.getElementById('createButton').style.display = 'none';
+    document.getElementById('editButton').style.display = 'inline-block';
+    document.getElementById('deleteButton').style.display = 'inline-block';
+}
+
+function formatEuro(value) {
+    if (value) {
+        return parseFloat(value.replace(',', '.')).toFixed(2).replace('.', ',');
+    }
+    return '';
+}
+
+function deleteLohnsaetze() {
+    const lohnsaetzeId = document.getElementById('lohnsaetze_id').value;
+    const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+
+    if (confirm('Are you sure you want to delete this Lohnsaetze?')) {
+        fetch(`/delete_lohnsaetze/${lohnsaetzeId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken
+            }
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(data => {
+                    if (data.message === 'success') {
+                        showFlashMessage('Lohnsaetze deleted successfully!', 'success');
+                        updateLohnsaetzeTable(document.getElementById('form_kraftwerk_id').value);
+                    } else {
+                        showFlashMessage('Error deleting Lohnsaetze.', 'danger');
+                    }
+                });
+            } else {
+                showFlashMessage('Error deleting Lohnsaetze.', 'danger');
+            }
+        });
+    }
+}
+
+function showFlashMessage(message, category) {
+    const flashContainer = document.createElement('div');
+    flashContainer.className = `alert alert-${category} alert-dismissible fade show`;
+    flashContainer.role = 'alert';
+    flashContainer.innerHTML = `
+        ${message}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    `;
+    document.body.insertBefore(flashContainer, document.body.firstChild);
+    setTimeout(() => {
+        flashContainer.classList.remove('show');
+        flashContainer.classList.add('hide');
+        setTimeout(() => {
+            flashContainer.remove();
+        }, 500);
+    }, 5000);
+}
+</script>
+{% endblock %}

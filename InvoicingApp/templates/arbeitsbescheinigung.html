@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Arbeitsbescheinigung{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Arbeitsbescheinigung</h1>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}  <!-- Include CSRF token here -->
+        <div class="form-group">
+            {{ form.auftraggeber.label(class="form-label") }}
+            {{ form.auftraggeber(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.new_auftraggeber.label(class="form-label") }}
+            {{ form.new_auftraggeber(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.rahmenvertrags_nr.label(class="form-label") }}
+            {{ form.rahmenvertrags_nr(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.new_rahmenvertrags_nr.label(class="form-label") }}
+            {{ form.new_rahmenvertrags_nr(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.projekt.label(class="form-label") }}
+            {{ form.projekt(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.new_projekt.label(class="form-label") }}
+            {{ form.new_projekt(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.auftrags_nr.label(class="form-label") }}
+            {{ form.auftrags_nr(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.new_auftrags_nr.label(class="form-label") }}
+            {{ form.new_auftrags_nr(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.bestelldatum.label(class="form-label") }}
+            {{ form.bestelldatum(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.baustelle.label(class="form-label") }}
+            {{ form.baustelle(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.new_baustelle.label(class="form-label") }}
+            {{ form.new_baustelle(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.kraftwerk.label(class="form-label") }}
+            {{ form.kraftwerk }}
+        </div>
+        <div class="form-group">
+            {{ form.trv.label(class="form-label") }}
+            {{ form.trv }}
+        </div>
+        <div class="form-group">
+            {{ form.bemerkung.label(class="form-label") }}
+            {{ form.bemerkung(class="form-control") }}
+        </div>
+        <!-- Include other form fields as needed -->
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Eingabe Arbeits-Bescheinigungen{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Eingabe Arbeits-Bescheinigungen</h1>
+    <form id="arb-besch-form" method="post">
+        {{ form.hidden_tag() }}  <!-- Include CSRF token here -->
+        
+        <div class="form-group">
+            {{ form.auftraggeber.label(class="form-label") }}
+            {{ form.auftraggeber(class="form-control") }}
+        </div>
+        
+        <div class="form-group">
+            {{ form.rahmenvertrags_nr.label(class="form-label") }}
+            {{ form.rahmenvertrags_nr(class="form-control") }}
+        </div>
+        
+        <div class="form-group">
+            {{ form.projekt.label(class="form-label") }}
+            {{ form.projekt(class="form-control") }}
+        </div>
+        
+        <div class="form-group">
+            {{ form.auftrags_nr.label(class="form-label") }}
+            {{ form.auftrags_nr(class="form-control") }}
+        </div>
+        
+        <div class="form-group">
+            {{ form.bestelldatum.label(class="form-label") }}
+            {{ form.bestelldatum(class="form-control") }}
+        </div>
+        
+        <div class="form-group">
+            {{ form.baustelle.label(class="form-label") }}
+            {{ form.baustelle(class="form-control") }}
+        </div>
+        
+        <div class="form-group">
+            {{ form.kraftwerk.label(class="form-check-label") }}
+            {{ form.kraftwerk(class="form-check-input") }}
+        </div>
+        
+        <div class="form-group">
+            {{ form.trv.label(class="form-check-label") }}
+            {{ form.trv(class="form-check-input") }}
+        </div>
+        
+        <div class="form-group">
+            {{ form.bemerkung.label(class="form-label") }}
+            {{ form.bemerkung(class="form-control") }}
+        </div>
+        
+        <div class="buttons text-center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="/" class="btn btn-danger">Zurück zur Hauptübersicht</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

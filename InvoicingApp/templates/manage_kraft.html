@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Kraftwerk</title>
+    <script>
+        function deleteKraftwerk(kraftwerkName) {
+            fetch(`/delete_kraftwerk/${kraftwerkName}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token() }}' // Include this if CSRF protection is enabled
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'success') {
+                    alert('Kraftwerk deleted successfully!');
+                    location.reload(); // Reload the page to update the list
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting the Kraftwerk.');
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Manage Kraftwerk</h1>
+    <form method="POST" action="{{ url_for('manage_kraftwerk') }}">
+        <!-- Add fields to manage Kraftwerk entries -->
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+            {% for kraftwerk in kraftwerke %}
+            <tr>
+                <td>{{ kraftwerk.name }}</td>
+                <td>
+                    <button type="button" onclick="deleteKraftwerk('{{ kraftwerk.name }}')">Delete</button>
+                    <!-- Add buttons for editing if needed -->
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <p>
+            <label for="new_kraftwerkname">New Kraftwerkname</label>
+            <input type="text" id="new_kraftwerkname" name="new_kraftwerkname">
+        </p>
+        <p>
+            <button type="submit">Save</button>
+        </p>
+    </form>
+</body>
+</html>

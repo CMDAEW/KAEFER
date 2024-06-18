@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block title %}Lohnzulagen Pflegen{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="page-header">
+        <h1>Lohnzulagen Pflegen</h1>
+    </div>
+    <form id="zulageForm" action="{{ url_for('main.lohnzulagen_pflegen') }}" method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.zulage_id }}
+
+        <div class="form-group">
+            {{ form.zulage_art.label(class="form-label") }}
+            {{ form.zulage_art(id="form_zulage_art", class="form-control" if not form.zulage_art.errors else "form-control is-invalid") }}
+            {% if form.zulage_art.errors %}
+                <div class="invalid-feedback">
+                    {{ form.zulage_art.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.bezeichnung.label(class="form-label") }}
+            {{ form.bezeichnung(id="form_bezeichnung", class="form-control" if not form.bezeichnung.errors else "form-control is-invalid") }}
+            {% if form.bezeichnung.errors %}
+                <div class="invalid-feedback">
+                    {{ form.bezeichnung.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.zulage_proz.label(class="form-label") }}
+            {{ form.zulage_proz(id="form_zulage_proz", class="form-control" if not form.zulage_proz.errors else "form-control is-invalid") }}
+            {% if form.zulage_proz.errors %}
+                <div class="invalid-feedback">
+                    {{ form.zulage_proz.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" id="createButton">Create</button>
+            <button type="submit" class="btn btn-warning" id="editButton" style="display: none;">Save</button>
+            <button type="button" class="btn btn-danger" id="deleteButton" style="display: none;" onclick="deleteZulage()">Delete</button>
+        </div>
+    </form>
+
+    {% if zulagen %}
+        <div class="alert alert-info">Bitte klicken Sie auf eine Zeile, um die Lohnzulage zu bearbeiten.</div>
+        <div class="table-responsive mt-5">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Zulage Art</th>
+                        <th>Bezeichnung</th>
+                        <th>Zulage Prozent</th>
+                        <th>Angelegt Durch</th>
+                        <th>Angelegt Datum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for zulage in zulagen %}
+                        <tr class="clickable-row" data-zulage='{{ zulage.to_dict() | tojson | safe }}'>
+                            <td>{{ zulage.zulage_art }}</td>
+                            <td>{{ zulage.bezeichnung }}</td>
+                            <td>{{ zulage.zulage_proz }}</td>
+                            <td>{{ zulage.angelegt_durch }}</td>
+                            <td>{{ zulage.angelegt_dat }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No Lohnzulagen entries found.</p>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const rows = document.querySelectorAll('.clickable-row');
+        rows.forEach(row => {
+            row.addEventListener('click', function() {
+                const zulage = JSON.parse(this.getAttribute('data-zulage'));
+                selectZulage(zulage);
+            });
+        });
+    });
+
+    function selectZulage(zulage) {
+        document.getElementById('zulage_id').value = zulage.zulage_art;
+        document.getElementById('form_zulage_art').value = zulage.zulage_art;
+        document.getElementById('form_bezeichnung').value = zulage.bezeichnung;
+        document.getElementById('form_zulage_proz').value = zulage.zulage_proz;
+
+        document.getElementById('createButton').style.display = 'none';
+        document.getElementById('editButton').style.display = 'inline-block';
+        document.getElementById('deleteButton').style.display = 'inline-block';
+    }
+
+    function deleteZulage() {
+        const zulageId = document.getElementById('zulage_id').value;
+        const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+
+        if (confirm('Are you sure you want to delete this Lohnzulage?')) {
+            fetch(`/delete_zulage/${zulageId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken
+                }
+            }).then(response => {
+                if (response.ok) {
+                    response.json().then(data => {
+                        if (data.message === 'success') {
+                            showFlashMessage('Lohnzulage deleted successfully!', 'success');
+                            window.location.reload();
+                        } else {
+                            showFlashMessage('Error deleting Lohnzulage.', 'danger');
+                        }
+                    });
+                } else {
+                    showFlashMessage('Error deleting Lohnzulage.', 'danger');
+                }
+            });
+        }
+    }
+
+    function showFlashMessage(message, category) {
+        const flashContainer = document.createElement('div');
+        flashContainer.className = `alert alert-${category} alert-dismissible`;
+        flashContainer.innerHTML = `
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            ${message}
+        `;
+        document.body.insertBefore(flashContainer, document.body.firstChild);
+        setTimeout(() => {
+            flashContainer.remove();
+        }, 5000);
+    }
+</script>
+{% endblock %}

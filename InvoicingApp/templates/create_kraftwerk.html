@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Create Kraftwerk{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="page-header">
+        <h1>Create Kraftwerk</h1>
+    </div>
+    <form id="kraftwerkForm" action="{{ url_for('main.create_kraftwerk') }}" method="POST" class="needs-validation" novalidate>
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            {{ form.kraftwerkname.label(class="form-label") }}
+            {{ form.kraftwerkname(id="form_kraftwerkname", class="form-control" if not form.kraftwerkname.errors else "form-control is-invalid") }}
+            {% if form.kraftwerkname.errors %}
+                <div class="invalid-feedback">
+                    {{ form.kraftwerkname.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.partner_id.label(class="form-label") }}
+            {{ form.partner_id(id="form_partner_id", class="form-control" if not form.partner_id.errors else "form-control is-invalid") }}
+            {% if form.partner_id.errors %}
+                <div class="invalid-feedback">
+                    {{ form.partner_id.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

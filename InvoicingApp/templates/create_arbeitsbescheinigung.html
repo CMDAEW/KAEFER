@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Create Arbeitsbescheinigung</h1>
+    <form method="post">
+        {{ form.hidden_tag() }}
+        {{ detail_form.hidden_tag() }}
+        
+        <div class="form-group">
+            {{ detail_form.rv_pos.label }} {{ detail_form.rv_pos(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.monteur.label }} {{ detail_form.monteur(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.menge.label }} {{ detail_form.menge(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.me.label }} {{ detail_form.me(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.ep.label }} {{ detail_form.ep(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.per.label }} {{ detail_form.per(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.so.label }} {{ detail_form.so(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.mo.label }} {{ detail_form.mo(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.di.label }} {{ detail_form.di(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.mi.label }} {{ detail_form.mi(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.do.label }} {{ detail_form.do(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.fr.label }} {{ detail_form.fr(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.sa.label }} {{ detail_form.sa(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.lohn_art.label }} {{ detail_form.lohn_art(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.basis_ep.label }} {{ detail_form.basis_ep(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.zulage_art1.label }} {{ detail_form.zulage_art1(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.zu_std1.label }} {{ detail_form.zu_std1(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.zulage_art2.label }} {{ detail_form.zulage_art2(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.zu_std2.label }} {{ detail_form.zu_std2(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.zulage_art3.label }} {{ detail_form.zulage_art3(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.zu_std3.label }} {{ detail_form.zu_std3(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.zulage_art4.label }} {{ detail_form.zulage_art4(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.zu_std4.label }} {{ detail_form.zu_std4(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.gp.label }} {{ detail_form.gp(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.satz_nr.label }} {{ detail_form.satz_nr(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.gruppe.label }} {{ detail_form.gruppe(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.angelegt_dat.label }} {{ detail_form.angelegt_dat(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.angelegt_durch.label }} {{ detail_form.angelegt_durch(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.geaendert_dat.label }} {{ detail_form.geaendert_dat(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.geaendert_durch.label }} {{ detail_form.geaendert_durch(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.kraftwerkname.label }} {{ detail_form.kraftwerkname(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.ArbBeschNr.label }} {{ detail_form.ArbBeschNr(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ detail_form.gesamtstunden.label }} {{ detail_form.gesamtstunden(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.arb_besch_summe.label }} {{ form.arb_besch_summe(class="form-control") }}
+        </div>
+
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+</div>
+{% endblock %}

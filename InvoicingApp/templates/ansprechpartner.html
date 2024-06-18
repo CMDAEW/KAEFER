@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Ansprechpartner{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Ansprechpartner</h1>
+    <form id="partnerForm" method="post" class="mb-5">
+        {{ form.hidden_tag() }}
+        <input type="hidden" name="partner_id" id="partner_id" value="{{ edit_id or '' }}">
+
+        <div class="form-group">
+            {{ form.anrede.label(class="form-label") }}
+            {{ form.anrede(id="form_anrede", class="form-control" if not form.anrede.errors else "form-control is-invalid") }}
+            {% if form.anrede.errors %}
+                <div class="invalid-feedback">
+                    {{ form.anrede.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.vorname.label(class="form-label") }}
+            {{ form.vorname(id="form_vorname", class="form-control" if not form.vorname.errors else "form-control is-invalid") }}
+            {% if form.vorname.errors %}
+                <div class="invalid-feedback">
+                    {{ form.vorname.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.nachname.label(class="form-label") }}
+            {{ form.nachname(id="form_nachname", class="form-control" if not form.nachname.errors else "form-control is-invalid") }}
+            {% if form.nachname.errors %}
+                <div class="invalid-feedback">
+                    {{ form.nachname.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.telefonnummer.label(class="form-label") }}
+            {{ form.telefonnummer(id="form_telefonnummer", class="form-control" if not form.telefonnummer.errors else "form-control is-invalid") }}
+            {% if form.telefonnummer.errors %}
+                <div class="invalid-feedback">
+                    {{ form.telefonnummer.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.telefaxnummer.label(class="form-label") }}
+            {{ form.telefaxnummer(id="form_telefaxnummer", class="form-control" if not form.telefaxnummer.errors else "form-control is-invalid") }}
+            {% if form.telefaxnummer.errors %}
+                <div class="invalid-feedback">
+                    {{ form.telefaxnummer.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(id="form_email", class="form-control" if not form.email.errors else "form-control is-invalid") }}
+            {% if form.email.errors %}
+                <div class="invalid-feedback">
+                    {{ form.email.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" id="createButton">Create</button>
+            <button type="submit" class="btn btn-warning" id="editButton" style="display: none;">Save</button>
+            <button type="button" class="btn btn-danger" id="deleteButton" style="display: none;" onclick="deletePartner()">Delete</button>
+        </div>
+    </form>
+
+    {% if partners %}
+        <div class="alert alert-info">Bitte klicken Sie auf eine Zeile, um den Ansprechpartner zu bearbeiten.</div>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nummer</th>
+                        <th>Anrede</th>
+                        <th>Vorname</th>
+                        <th>Nachname</th>
+                        <th>Telefonnummer</th>
+                        <th>Telefaxnummer</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for partner in partners %}
+                        <tr class="clickable-row" data-partner='{{ partner.to_dict() | tojson | safe }}'>
+                            <td>{{ partner.nummer }}</td>
+                            <td>{{ partner.anrede }}</td>
+                            <td>{{ partner.vorname }}</td>
+                            <td>{{ partner.nachname }}</td>
+                            <td>{{ partner.telefonnummer }}</td>
+                            <td>{{ partner.telefaxnummer }}</td>
+                            <td>{{ partner.email }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No partners found.</p>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const rows = document.querySelectorAll('.clickable-row');
+        rows.forEach(row => {
+            row.addEventListener('click', function() {
+                const partner = JSON.parse(this.getAttribute('data-partner'));
+                selectPartner(partner);
+            });
+        });
+    });
+
+    function selectPartner(partner) {
+        document.getElementById('partner_id').value = partner.nummer;
+        document.getElementById('form_anrede').value = partner.anrede;
+        document.getElementById('form_vorname').value = partner.vorname;
+        document.getElementById('form_nachname').value = partner.nachname;
+        document.getElementById('form_telefonnummer').value = partner.telefonnummer;
+        document.getElementById('form_telefaxnummer').value = partner.telefaxnummer;
+        document.getElementById('form_email').value = partner.email;
+
+        document.getElementById('createButton').style.display = 'none';
+        document.getElementById('editButton').style.display = 'inline-block';
+        document.getElementById('deleteButton').style.display = 'inline-block';
+    }
+
+    function deletePartner() {
+        const partnerId = document.getElementById('partner_id').value;
+        if (confirm('Are you sure you want to delete this partner?')) {
+            fetch(`/delete_partner/${partnerId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ form.csrf_token.current_token }}'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Error deleting partner.');
+                }
+            });
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Create Kopfdaten{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Create Kopfdaten</h1>
+    <form method="post" action="{{ url_for('main.create_kopfdaten') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.auftraggeber.label }}
+            {{ form.auftraggeber(class="form-control", onchange="toggleNewEntryField('auftraggeber', this.value)") }}
+            <input type="text" name="new_auftraggeber" id="new_auftraggeber" class="form-control" placeholder="New Auftraggeber" style="display:none;">
+        </div>
+        <div class="form-group">
+            {{ form.rahmenvertrags_nr.label }}
+            {{ form.rahmenvertrags_nr(class="form-control", onchange="toggleNewEntryField('rahmenvertrags_nr', this.value)") }}
+            <input type="text" name="new_rahmvertrags_nr" id="new_rahmvertrags_nr" class="form-control" placeholder="New rahmenvertrags_nr" style="display:none;">
+        </div>
+        <div class="form-group">
+            {{ form.projekt.label }}
+            {{ form.projekt(class="form-control", onchange="toggleNewEntryField('projekt', this.value)") }}
+            <input type="text" name="new_projekt" id="new_projekt" class="form-control" placeholder="New Projekt" style="display:none;">
+        </div>
+        <div class="form-group">
+            {{ form.kommisionsnummer.label }}
+            {{ form.kommisionsnummer(class="form-control", onchange="toggleNewEntryField('kommisionsnummer', this.value)") }}
+            <input type="text" name="new_kommisionsnummer" id="new_kommisionsnummer" class="form-control" placeholder="New Kommisionsnummer" style="display:none;">
+        </div>
+        <div class="form-group">
+            {{ form.baustelle.label }}
+            {{ form.baustelle(class="form-control", onchange="toggleNewEntryField('baustelle', this.value)") }}
+            <input type="text" name="new_baustelle" id="new_baustelle" class="form-control" placeholder="New Baustelle" style="display:none;">
+        </div>
+        <div class="form-group">
+            {{ form.auftrags_nr_kaefer.label }}
+            {{ form.auftrags_nr_kaefer(class="form-control", onchange="toggleNewEntryField('auftrags_nr_kaefer', this.value)") }}
+            <input type="text" name="new_auftrags_nr_kaefer" id="new_auftrags_nr_kaefer" class="form-control" placeholder="New AuftragsNr KAEFER" style="display:none;">
+        </div>
+        <!-- Include other form fields for ArbeitsbeschKopfdatenForm here -->
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+</div>
+
+<script>
+function toggleNewEntryField(field, value) {
+    var newEntryField = document.getElementById('new_' + field);
+    if (value === 'new_entry') {
+        newEntryField.style.display = 'block';
+    } else {
+        newEntryField.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

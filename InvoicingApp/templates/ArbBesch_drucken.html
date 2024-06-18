@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Eingabe Arbeits-Bescheinigungen{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Eingabe Arbeits-Bescheinigungen</h1>
+    <form id="arb-besch-form">
+        <div class="form-group">
+            <label for="auftraggeber">Auftraggeber:</label>
+            <input type="text" class="form-control" id="auftraggeber" name="auftraggeber" value="Nordzucker">
+        </div>
+        <div class="form-group">
+            <label for="rahmenvertrags-nr">Rahmenvertrags-Nr.:</label>
+            <input type="text" class="form-control" id="rahmenvertrags-nr" name="rahmenvertrags_nr" value="1">
+        </div>
+        <div class="form-group">
+            <label for="projekt">Projekt:</label>
+            <input type="text" class="form-control" id="projekt" name="projekt" value="2">
+        </div>
+        <div class="form-group">
+            <label for="auftrags-nr">Auftrags-Nr.:</label>
+            <input type="text" class="form-control" id="auftrags-nr" name="auftrags_nr" value="3">
+        </div>
+        <div class="form-group">
+            <label for="bestelldatum">Bestelldatum:</label>
+            <input type="date" class="form-control" id="bestelldatum" name="bestelldatum">
+        </div>
+        <div class="form-group">
+            <label for="baustelle">Baustelle:</label>
+            <input type="text" class="form-control" id="baustelle" name="baustelle" value="avc">
+        </div>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="kraftwerk" name="kraftwerk" checked>
+            <label class="form-check-label" for="kraftwerk">Kraftwerk</label>
+        </div>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="trv" name="trv">
+            <label class="form-check-label" for="trv">TRV</label>
+        </div>
+        <div class="form-group">
+            <label for="bemerkung">Bemerkung:</label>
+            <textarea class="form-control" id="bemerkung" name="bemerkung" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Erstellt von:</label>
+            <p>Bremermann</p>
+        </div>
+        <div class="form-group">
+            <label>Geaendert von:</label>
+            <p>cmd</p>
+        </div>
+        <div class="form-group">
+            <label>Erstellt am:</label>
+            <p>14.05.2024</p>
+        </div>
+        <div class="form-group">
+            <label>Geaendert am:</label>
+            <p>15.05.2024</p>
+        </div>
+        <div class="form-group">
+            <label>Summe:</label>
+            <p>759,00 €</p>
+        </div>
+        <div class="buttons text-center">
+            <button type="button" class="btn btn-primary" id="preview-button">Seitenansicht mit Preisen</button>
+            <button type="button" class="btn btn-primary">Seitenansicht ohne Preise</button>
+            <button type="button" class="btn btn-primary">Optionen...</button>
+            <a href="/" class="btn btn-danger">Zurück zur Hauptübersicht</a>
+        </div>
+    </form>
+</div>
+
+<script>
+document.getElementById('preview-button').addEventListener('click', function() {
+    const formData = {
+        auftraggeber: document.getElementById('auftraggeber').value,
+        rahmenvertrags_nr: document.getElementById('rahmenvertrags-nr').value,
+        projekt: document.getElementById('projekt').value,
+        auftrags_nr: document.getElementById('auftrags-nr').value,
+        bestelldatum: document.getElementById('bestelldatum').value,
+        baustelle: document.getElementById('baustelle').value,
+        kraftwerk: document.getElementById('kraftwerk').checked,
+        trv: document.getElementById('trv').checked,
+        bemerkung: document.getElementById('bemerkung').value
+    };
+    fetch('/generate_report', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+    })
+    .catch(error => console.error('Error generating report:', error));
+});
+</script>
+{% endblock %}

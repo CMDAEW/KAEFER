@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-4">
+    <h1 class="mb-4">EP Daten</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>RV_Pos</th>
+                <th>DN</th>
+                <th>DA</th>
+                <th>IS</th>
+                <th>ME</th>
+                <th>EP</th>
+                <th>AngelegtDat</th>
+                <th>Angelegt_durch</th>
+                <th>GeaendertDat</th>
+                <th>Geaendert_durch</th>
+                <th>Leistung</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ep in eps %}
+            <tr>
+                <td>{{ ep.RV_Pos }}</td>
+                <td>{{ ep.DN }}</td>
+                <td>{{ ep.DA }}</td>
+                <td>{{ ep.IS }}</td>
+                <td>{{ ep.ME }}</td>
+                <td>{{ ep.EP }}</td>
+                <td>{{ ep.AngelegtDat }}</td>
+                <td>{{ ep.Angelegt_durch }}</td>
+                <td>{{ ep.GeaendertDat }}</td>
+                <td>{{ ep.Geaendert_durch }}</td>
+                <td>{{ ep.Leistung }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

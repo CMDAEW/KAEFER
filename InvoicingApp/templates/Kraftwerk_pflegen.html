@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Kraftwerk Pflegen{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-5">Kraftwerk Pflegen</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alert alert-dismissible fade show" role="alert">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <form method="POST" action="{{ url_for('main.Kraftwerk_pflegen') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.name.label(class="form-control-label") }}
+            {{ form.name(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+
+    <!-- Display Kraftwerk entries from the database -->
+    {% if kraftwerke %}
+        <div class="table-responsive mt-5">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for kraftwerk in kraftwerke %}
+                        <tr>
+                            <td>{{ kraftwerk.id }}</td>
+                            <td>{{ kraftwerk.name }}</td>
+                            <td>
+                                <a href="{{ url_for('main.edit_kraftwerk', kraftwerk_id=kraftwerk.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <form action="{{ url_for('main.delete_kraftwerk', kraftwerk_id=kraftwerk.id) }}" method="post" style="display:inline;">
+                                    {{ form.hidden_tag() }}  <!-- Add CSRF token here -->
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this kraftwerk?');">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No Kraftwerk entries found.</p>
+    {% endif %}
+</div>
+{% endblock %}

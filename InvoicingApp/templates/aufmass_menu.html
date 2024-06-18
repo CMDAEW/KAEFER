@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Aufmaß - Menü</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Aufmaß - Menü</h1>
+        <form action="/aufmass/action" method="post">
+            <div class="form-group">
+                <label><input type="radio" name="aufmass_option" value="hinzufuegen"> hinzufügen</label><br>
+                <label><input type="radio" name="aufmass_option" value="bearbeiten" checked> bearbeiten</label><br>
+                <label><input type="radio" name="aufmass_option" value="berichte_anzeigen"> Berichte anzeigen / drucken</label><br>
+                <label><input type="radio" name="aufmass_option" value="summe_drucken"> Aufmaßbeträge aufaddieren / drucken</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Weiter</button>
+            <a href="/" class="btn btn-secondary">Zurück</a>
+        </form>
+    </div>
+</body

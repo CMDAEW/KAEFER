@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Form</title>
+    <script>
+        function toggleFieldVisibility(fieldId, condition) {
+            const field = document.getElementById(fieldId);
+            field.style.display = condition ? 'block' : 'none';
+        }bbbbbbbbbbbbbbbbbbbb
+
+        function toggleAllNewFields() {
+            toggleFieldVisibility('new_kraftwerkname_field', document.getElementById('auftraggeber').value === 'new');
+            toggleFieldVisibility('new_rahmenvertragsnr_field', document.getElementById('rahmenvertrags_nr').value === 'new');
+            toggleFieldVisibility('new_projekt_field', document.getElementById('projekt').value === 'new');
+            toggleFieldVisibility('new_auftrags_nr_field', document.getElementById('auftrags_nr').value === 'new');
+            toggleFieldVisibility('new_baustelle_field', document.getElementById('baustelle').value === 'new');
+            toggleFieldVisibility('new_auftrags_nr_kaefer_field', document.getElementById('auftrags_nr_kaefer').value === 'new');
+        }
+    </script>
+</head>
+<body onload="toggleAllNewFields()">
+    <form method="POST" action="{{ url_for('new_project') }}">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.auftraggeber.label }}<br>
+            {{ form.auftraggeber(id='auftraggeber', onchange='toggleAllNewFields()') }}
+        </p>
+        <p id="new_kraftwerkname_field" style="display: none;">
+            {{ form.new_kraftwerkname.label }}<br>
+            {{ form.new_kraftwerkname(size=32) }}
+        </p>
+        <p>
+            {{ form.rahmenvertrags_nr.label }}<br>
+            {{ form.rahmenvertrags_nr(id='rahmenvertrags_nr', onchange='toggleAllNewFields()') }}
+        </p>
+        <p id="new_rahmenvertragsnr_field" style="display: none;">
+            {{ form.new_rahmenvertragsnr.label }}<br>
+            {{ form.new_rahmenvertragsnr(size=32) }}
+        </p>
+        <p>
+            {{ form.projekt.label }}<br>
+            {{ form.projekt(id='projekt', onchange='toggleAllNewFields()') }}
+        </p>
+        <p id="new_projekt_field" style="display: none;">
+            {{ form.new_projekt.label }}<br>
+            {{ form.new_projekt(size=32) }}
+        </p>
+        <p>
+            {{ form.auftrags_nr.label }}<br>
+            {{ form.auftrags_nr(id='auftrags_nr', onchange='toggleAllNewFields()') }}
+        </p>
+        <p id="new_auftrags_nr_field" style="display: none;">
+            {{ form.new_auftrags_nr.label }}<br>
+            {{ form.new_auftrags_nr(size=32) }}
+        </p>
+        <p>
+            {{ form.bestelldatum.label }}<br>
+            {{ form.bestelldatum() }}
+        </p>
+        <p>
+            {{ form.baustelle.label }}<br>
+            {{ form.baustelle(id='baustelle', onchange='toggleAllNewFields()') }}
+        </p>
+        <p id="new_baustelle_field" style="display: none;">
+            {{ form.new_baustelle.label }}<br>
+            {{ form.new_baustelle(size=32) }}
+        </p>
+        <p>
+            {{ form.k_trv.label }}<br>
+            {{ form.k_trv() }}
+        </p>
+        <p>
+            {{ form.auftrags_nr_kaefer.label }}<br>
+            {{ form.auftrags_nr_kaefer(id='auftrags_nr_kaefer', onchange='toggleAllNewFields()') }}
+        </p>
+        <p id="new_auftrags_nr_kaefer_field" style="display: none;">
+            {{ form.new_auftrags_nr_kaefer.label }}<br>
+            {{ form.new_auftrags_nr_kaefer(size=32) }}
+        </p>
+        <p>
+            {{ form.ausfuehrungsbeginn.label }}<br>
+            {{ form.ausfuehrungsbeginn() }}
+        </p>
+        <p>
+            {{ form.ausfuehrungsende.label }}<br>
+            {{ form.ausfuehrungsende() }}
+        </p>
+        <p>
+            {{ form.bemerkung.label }}<br>
+            {{ form.bemerkung(rows=4, cols=40) }}
+        </p>
+        <h3>Detail Section</h3>
+        <p>
+            {{ form.aufmass_nr.label }}<br>
+            {{ form.aufmass_nr() }}
+        </p>
+        <p>
+            {{ form.monteur.label }}<br>
+            {{ form.monteur(size=32) }}
+        </p>
+        <p>
+            {{ form.lohnart.label }}<br>
+            {{ form.lohnart(size=32) }}
+        </p>
+        <p>
+            {{ form.so.label }}<br>
+            {{ form.so() }}
+        </p>
+        <p>
+            {{ form.mo.label }}<br>
+            {{ form.mo() }}
+        </p>
+        <p>
+            {{ form.di.label }}<br>
+            {{ form.di() }}
+        </p>
+        <p>
+            {{ form.mi.label }}<br>
+            {{ form.mi() }}
+        </p>
+        <p>
+            {{ form.do.label }}<br>
+            {{ form.do() }}
+        </p>
+        <p>
+            {{ form.fr.label }}<br>
+            {{ form.fr() }}
+        </p>
+        <p>
+            {{ form.sa.label }}<br>
+            {{ form.sa() }}
+        </p>
+        <p>
+            {{ form.gesamtstunden.label }}<br>
+            {{ form.gesamtstunden() }}
+        </p>
+        <p>
+            {{ form.gesamtpreis.label }}<br>
+            {{ form.gesamtpreis() }}
+        </p>
+        <p>
+            {{ form.submit() }}
+        </p>
+    </form>
+</body>
+</html>

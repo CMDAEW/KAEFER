@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Arbeitsbescheinigung hinzufügen{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Arbeitsbescheinigung hinzufügen</h1>
+    <form method="post" action="{{ url_for('main.create_detaildaten') }}">
+        {{ detaildaten_form.hidden_tag() }}
+        {{ kopfdaten_form.hidden_tag() }}
+
+        <div class="form-group">
+            {{ kopfdaten_form.auftraggeber.label }}
+            {{ kopfdaten_form.auftraggeber(class="form-control", id="auftraggeber", onchange="updatelohnartChoices(this.value)") }}
+            <input type="text" name="new_auftraggeber" id="new_auftraggeber" class="form-control" placeholder="New Auftraggeber" style="display:none;">
+        </div>
+        <div class="form-group">
+            {{ kopfdaten_form.rahmenvertrags_nr.label }}
+            {{ kopfdaten_form.rahmenvertrags_nr(class="form-control", onchange="toggleNewEntryField('rahmenvertrags_nr', this.value)") }}
+            <input type="text" name="new_rahmenvertrags_nr" id="new_rahmenvertrags_nr" class="form-control" placeholder="New rahmenvertrags_nr" style="display:none;">
+        </div>
+        <div class="form-group">
+            {{ kopfdaten_form.projekt.label }}
+            {{ kopfdaten_form.projekt(class="form-control", onchange="toggleNewEntryField('projekt', this.value)") }}
+            <input type="text" name="new_projekt" id="new_projekt" class="form-control" placeholder="New Projekt" style="display:none;">
+        </div>
+        <div class="form-group">
+            {{ kopfdaten_form.kommisionsnummer.label }}
+            {{ kopfdaten_form.kommisionsnummer(class="form-control", onchange="toggleNewEntryField('kommisionsnummer', this.value)") }}
+            <input type="text" name="new_kommisionsnummer" id="new_kommisionsnummer" class="form-control" placeholder="New Kommisionsnummer" style="display:none;">
+        </div>
+        <div class="form-group">
+            {{ kopfdaten_form.baustelle.label }}
+            {{ kopfdaten_form.baustelle(class="form-control", onchange="toggleNewEntryField('baustelle', this.value)") }}
+            <input type="text" name="new_baustelle" id="new_baustelle" class="form-control" placeholder="New Baustelle" style="display:none;">
+        </div>
+        <div class="form-group">
+            {{ kopfdaten_form.auftrags_nr_kaefer.label }}
+            {{ kopfdaten_form.auftrags_nr_kaefer(class="form-control", onchange="toggleNewEntryField('auftrags_nr_kaefer', this.value)") }}
+            <input type="text" name="new_auftrags_nr_kaefer" id="new_auftrags_nr_kaefer" class="form-control" placeholder="New AuftragsNr KAEFER" style="display:none;">
+        </div>
+
+        <div class="form-group">
+            {{ detaildaten_form.Benennung.label }}
+            {{ detaildaten_form.Benennung(class="form-control", onchange="toggleNewEntryField('Benennung', this.value)") }}
+            <input type="text" name="new_Benennung" id="new_Benennung" class="form-control" placeholder="New Benennung" style="display:none;">
+        </div>
+        <div class="form-group">
+            {{ detaildaten_form.lohnart.label }}
+            {{ detaildaten_form.lohnart(class="form-control", id="lohnart") }}
+        </div>
+        <div class="form-group">
+            {{ detaildaten_form.so.label }}
+            {{ detaildaten_form.so(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ detaildaten_form.mo.label }}
+            {{ detaildaten_form.mo(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ detaildaten_form.di.label }}
+            {{ detaildaten_form.di(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ detaildaten_form.mi.label }}
+            {{ detaildaten_form.mi(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ detaildaten_form.do.label }}
+            {{ detaildaten_form.do(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ detaildaten_form.fr.label }}
+            {{ detaildaten_form.fr(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ detaildaten_form.sa.label }}
+            {{ detaildaten_form.sa(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ detaildaten_form.gesamtpreis.label }}
+            {{ detaildaten_form.gesamtpreis(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ detaildaten_form.gesamtstunden.label }}
+            {{ detaildaten_form.gesamtstunden(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ detaildaten_form.zu_std2.label }}
+            {{ detaildaten_form.zu_std2(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ detaildaten_form.zu_std4.label }}
+            {{ detaildaten_form.zu_std4(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ detaildaten_form.zu_std5.label }}
+            {{ detaildaten_form.zu_std5(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ detaildaten_form.zu_std6.label }}
+            {{ detaildaten_form.zu_std6(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ detaildaten_form.ArbBeschNr.label }}
+            {{ detaildaten_form.ArbBeschNr(class="form-control", readonly=True) }}
+        </div>
+        {{ detaildaten_form.submit(class="btn btn-primary") }}
+    </form>
+</div>
+
+<script>
+function toggleNewEntryField(field, value) {
+    var newEntryField = document.getElementById('new_' + field);
+    if (value === 'new_entry') {
+        newEntryField.style.display = 'block';
+    } else {
+        newEntryField.style.display = 'none';
+    }
+}
+
+function updatelohnartChoices(auftraggeber) {
+    fetch("{{ url_for('main.get_lohnart_choices') }}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({ auftraggeber: auftraggeber })
+    })
+    .then(response => response.json())
+    .then(data => {
+        var lohnartSelect = document.getElementById('lohnart');
+        lohnartSelect.innerHTML = '';
+        data.forEach(function(item) {
+            var option = document.createElement('option');
+            option.value = item[0];
+            option.text = item[1];
+            lohnartSelect.appendChild(option);
+        });
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
+{% endblock %}

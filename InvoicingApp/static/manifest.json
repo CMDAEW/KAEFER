@@ -1,0 +1,20 @@
+{
+  "name": "InvoicingApp",
+  "short_name": "Invoice",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/static/icons/PIM_Icon_Dashboard_N_RGB.jpg",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/PIM_Icon_Dashboard_N_RGB.jpg",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

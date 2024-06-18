@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}KAEFER Invoicing{% endblock %}
+
+{% block content %}
+<div class="mt-5 pt-5" style="margin-top: 15cm;">
+    <div class="d-flex flex-column align-items-center">
+        <button type="button" class="btn btn-primary btn-lg mb-3" data-toggle="modal" data-target="#aufmassModal">
+            Aufmaß
+        </button>
+        <button type="button" class="btn btn-secondary btn-lg mb-3" data-toggle="modal" data-target="#arbeitsbescheinigungModal">
+            Arbeitsbescheinigung
+        </button>
+        <button type="button" class="btn btn-info btn-lg mb-3" data-toggle="modal" data-target="#verwaltungModal">
+            Verwaltung
+        </button>
+    </div>
+
+    <!-- Aufmaß Modal -->
+    <div class="modal fade" id="aufmassModal" tabindex="-1" role="dialog" aria-labelledby="aufmassModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="aufmassModalLabel">Aufmaß Optionen</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <a href="{{ url_for('main.aufmass_erstellen') }}" class="btn btn-primary btn-block mb-2">Erstellen</a>
+                    <a href="{{ url_for('main.aufmass_bearbeiten') }}" class="btn btn-primary btn-block mb-2">Bearbeiten</a>
+                    <a href="{{ url_for('main.aufmass_berichte_anzeigen') }}" class="btn btn-primary btn-block mb-2">Berichte anzeigen</a>
+                    <a href="{{ url_for('main.aufmass_berichte_drucken') }}" class="btn btn-primary btn-block mb-2">Berichte drucken</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Arbeitsbescheinigung Modal -->
+    <div class="modal fade" id="arbeitsbescheinigungModal" tabindex="-1" role="dialog" aria-labelledby="arbeitsbescheinigungModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="arbeitsbescheinigungModalLabel">Arbeitsbescheinigung Optionen</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <a href="{{ url_for('main.Arbeitsbescheinigung_erstellen') }}" class="btn btn-primary btn-block mb-2">Erstellen</a>
+                    <a href="{{ url_for('main.arbeitsbescheinigung_bearbeiten') }}" class="btn btn-primary btn-block mb-2">Bearbeiten</a>
+                    <a href="{{ url_for('main.arbeitsbescheinigung_berichte_anzeigen') }}" class="btn btn-primary btn-block mb-2">Berichte anzeigen</a>
+                    <a href="{{ url_for('main.arbeitsbescheinigung_berichte_drucken') }}" class="btn btn-primary btn-block mb-2">Berichte drucken</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verwaltung Modal -->
+    <div class="modal fade" id="verwaltungModal" tabindex="-1" role="dialog" aria-labelledby="verwaltungModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="verwaltungModalLabel">Verwaltung Optionen</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <a href="{{ url_for('main.manage_kraftwerk') }}" class="btn btn-primary btn-block mb-2">Manage Kraftwerke</a>
+                    <a href="{{ url_for('main.lohnsaetze') }}" class="btn btn-primary btn-block mb-2">Lohnsätze Pflegen</a>
+                    <a href="{{ url_for('main.lohnzulagen_pflegen') }}" class="btn btn-primary btn-block mb-2">Lohnzulagen pflegen</a>
+                    <a href="{{ url_for('main.ansprechpartner') }}" class="btn btn-primary btn-block mb-2">Ansprechpartner</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

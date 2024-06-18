@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Lohnsatz{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="page-header">
+        <h1>Create Lohnsatz</h1>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flashes">
+        {% for category, message in messages %}
+          <li class="alert alert-{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <form action="{{ url_for('main.Lohn_Pflegen') }}" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.lohnart.label(class="form-label") }}
+            {{ form.lohnart(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.std_satz.label(class="form-label") }}
+            {{ form.std_satz(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.basis_satz.label(class="form-label") }}
+            {{ form.basis_satz(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.bezeichnung.label(class="form-label") }}
+            {{ form.bezeichnung(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.angelegt_durch.label(class="form-label") }}
+            {{ form.angelegt_durch(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.kraftwerk_id.label(class="form-label") }}
+            {{ form.kraftwerk_id(class="form-control") }}
+        </div>
+        <button type="submit" class="btn btn-primary">{{ form.submit() }}</button>
+    </form>
+</div>
+{% endblock %}

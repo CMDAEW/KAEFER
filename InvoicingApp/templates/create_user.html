@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAEFERANER erstellen</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='images/clean_background_no_text.png') }}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .btn {
+            margin-top: 10px;
+        }
+        .card-header {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .card-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .alert-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            KAEFERANER erstellen
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    <label for="username" class="form-label">Benutzername</label>
+                    {{ form.username(class="form-control", id="username") }}
+                    {% if form.username.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.username.errors[0] }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">Passwort</label>
+                    {{ form.password(class="form-control", id="password") }}
+                    {% if form.password.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.password.errors[0] }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password" class="form-label">Passwort bestätigen</label>
+                    {{ form.confirm_password(class="form-control", id="confirm_password") }}
+                    {% if form.confirm_password.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.confirm_password.errors[0] }}
+                    </div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Create User</button>
+            </form>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
