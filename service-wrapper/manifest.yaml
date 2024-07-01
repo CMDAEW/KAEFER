@@ -2,7 +2,7 @@ id: invoicing-app
 title: "KAEFER"
 description:
   short: "A Flask app running as a service"
-  long: |
+  long:
     This is a Flask application packaged as a service for Start9's EmbassyOS.
 version: 0.1.0
 release-notes: "Initial release of the OCMD1 Flask service."
@@ -16,7 +16,6 @@ assets:
   license: LICENSE
   icon: icon.png
   instructions: instructions.md
-  docker-images: image.tar
 main:
   type: docker
   image: main
@@ -24,7 +23,16 @@ main:
   args: []
   mounts:
     main: /root
-health-checks: {}
+  gpu-acceleration: false
+hardware-requirements:
+  arch:
+    - x86_64
+    - aarch64
+health-checks: 
+  web-ui:
+    name: Web Interface
+    success-message: The invoicing-app is accessible
+    type: script
 config: ~
 properties: ~
 volumes:
@@ -36,11 +44,11 @@ interfaces:
     description: A simple user interface for the OCMD1 Flask app
     tor-config:
       port-mapping:
-        5000: "5000"
+        80: "80"
     lan-config:
-      5000:
+      443:
         ssl: true
-        internal: 5000
+        internal: 80
     ui: true
     protocols:
       - tcp
@@ -72,13 +80,13 @@ backup:
       - /mnt/backup
     mounts:
       BACKUP: "/mnt/backup"
-      main: "/root/data"
+      main: /root/data
 migrations:
   from:
     "*":
       type: script
-      args: ["scripts/migrate-from.js"]
+      args: ["from"]
   to:
     "*":
       type: script
-      args: ["scripts/migrate-to.js"]
+      args: ["to"]
