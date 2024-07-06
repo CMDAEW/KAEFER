@@ -1,0 +1,98 @@
+id: invoicing-app
+title: KAEFER
+version: 0.1.1
+release-notes: |
+  Initial release of the Abrechnungsprogramm service.
+license: MIT
+wrapper-repo: "https://github.com/yourusername/ocmd1-wrapper"
+upstream-repo: "https://github.com/yourusername/ocmd1"
+support-site: "https://docs.yoursite.com/"
+marketing-site: "https://yoursite.com/"
+build: ["make"]
+description:
+  short: "A Flask app running as a service"
+  long: |
+    This is a Flask application packaged as a service for Start9's EmbassyOS.
+assets:
+  license: LICENSE
+  icon: icon.png
+  instructions: instructions.md
+main:
+  type: docker
+  image: main
+  entrypoint: entrypoint.sh
+  args: []
+  mounts:
+    main: /root
+    db: /var/lib/mysql
+health-checks:
+  web-ui:
+    name: Web Interface
+    success-message: The invoicing-app is accessible
+    type: script
+config:
+  get:
+    type: script
+  set:
+    type: script
+properties:
+  type: script
+dependencies: {}
+volumes:
+  main:
+    type: data
+  db:
+    type: data
+backup:
+  create:
+    type: docker
+    image: compat
+    system: true
+    entrypoint: compat
+    args:
+      - duplicity
+      - create
+      - /mnt/backup
+      - /root/data
+    mounts:
+      BACKUP: /mnt/backup
+      main: /root/data
+      db: /var/lib/mysql
+    io-format: yaml
+  restore:
+    type: docker
+    image: compat
+    system: true
+    entrypoint: compat
+    args:
+      - duplicity
+      - restore
+      - /mnt/backup
+      - /root/data
+    mounts:
+      BACKUP: /mnt/backup
+      main: /root/data
+      db: /var/lib/mysql
+    io-format: yaml
+migrations:
+  from:
+    "*":
+      type: script
+  to:
+    "*":
+      type: script
+interfaces:
+  main:
+    name: User Interface
+    description: Specifies the invoicing interface to listen on for HTTP connections.
+    tor-config:
+      port-mapping:
+        80: "5005"
+    lan-config:
+      443:
+        ssl: true
+        internal: 5005
+    ui: true
+    protocols:
+      - tcp
+      - http
