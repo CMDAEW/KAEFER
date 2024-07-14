@@ -4194,7 +4194,8 @@ const getConfig1 = mod3.getConfig({});
 const properties1 = mod3.properties;
 const migration = mod3.migrations.fromMapping({}, "0.3.5");
 const health = {
-    "web-ui": mod4.checkWebUrl("http://invoicing-app.embassy:5005")
+    "web-ui": mod4.checkWebUrl("http://invoicing-app.embassy:5005"),
+    "dbgate": mod4.checkWebUrl("http://invoicing-app.embassy:3000")
 };
 export { setConfig1 as setConfig };
 export { getConfig1 as getConfig };

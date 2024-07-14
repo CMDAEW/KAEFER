@@ -7,17 +7,40 @@ _term() {
   echo "Caught SIGTERM signal!" 
   kill -TERM "$backend_process" 2>/dev/null
   kill -TERM "$db_process" 2>/dev/null
+  kill -TERM "$dbgate_process" 2>/dev/null
+  kill -TERM "$xvfb_process" 2>/dev/null
+  kill -TERM "$dbus_process" 2>/dev/null
 }
 
+trap _term SIGTERM
+
 # Set environment variables
-export DB_NAME="invoicing"
-export DB_USER="flaskuser"
-export DB_PASSWORD="flaskpassword"
-export DB_DUMP_FILE="my_database_dump.sql"
+export DB_NAME=${DB_NAME:-invoicing}
+export DB_USER=${DB_USER:-flaskuser}
+export DB_PASSWORD=${DB_PASSWORD:-flaskpassword}
+export DB_DUMP_FILE=${DB_DUMP_FILE:-/app/my_database_dump.sql}
 
 echo "Starting Invoicing..."
 
-# DATABASE SETUP
+# Ensure D-Bus is installed
+if ! command -v dbus-daemon &> /dev/null
+then
+    echo "D-Bus is not installed. Installing..."
+    apt-get update && apt-get install -y dbus
+fi
+
+# Start D-Bus daemon
+echo "Starting D-Bus daemon..."
+dbus-daemon --config-file=/usr/share/dbus-1/system.conf --print-address --fork &
+dbus_process=$!
+DBUS_SESSION_BUS_ADDRESS=$(dbus-daemon --config-file=/usr/share/dbus-1/system.conf --print-address)
+
+# Export DBUS_SESSION_BUS_ADDRESS
+export DBUS_SESSION_BUS_ADDRESS
+
+# Start Xvfb
+Xvfb :99 -screen 0 1024x768x16 &
+xvfb_process=$!
 
 echo "$(date +'%Y-%m-%dT%H:%M:%S%z') Starting MariaDB server..."
 
@@ -59,28 +82,21 @@ if [ -z "$DB_EXISTS" ]; then
     echo "$(date +'%Y-%m-%dT%H:%M:%S%z') Creating database $DB_NAME..."
     mysql -e "CREATE DATABASE $DB_NAME;"
     echo "$(date +'%Y-%m-%dT%H:%M:%S%z') Creating user $DB_USER..."
-    mysql -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';"
-    echo "$(date +'%Y-%m-%dT%H:%M:%S%z') Granting privileges to user $DB_USER on database $DB_NAME..."
-    mysql -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
+    mysql -e "CREATE USER '$DB_USER'@'%' IDENTIFIED BY '$DB_PASSWORD';"
+    mysql -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%';"
     mysql -e "FLUSH PRIVILEGES;"
-    if [ -f "$DB_DUMP_FILE" ]; then
-        echo "$(date +'%Y-%m-%dT%H:%M:%S%z') Importing database dump from $DB_DUMP_FILE..."
-        mysql $DB_NAME < $DB_DUMP_FILE
-    else
-        echo "$(date +'%Y-%m-%dT%H:%M:%S%z') Database dump file $DB_DUMP_FILE not found."
-    fi
+    echo "$(date +'%Y-%m-%dT%H:%M:%S%z') Importing database dump..."
+    mysql $DB_NAME < $DB_DUMP_FILE
 else
     echo "$(date +'%Y-%m-%dT%H:%M:%S%z') Database $DB_NAME already exists."
 fi
 
-echo "$(date +'%Y-%m-%dT%H:%M:%S%z') Starting Invoicing..."
+echo "$(date +'%Y-%m-%dT%H:%M:%S%z') Applying database migrations..."
+flask db upgrade
 
-# Export environment variables for Flask
-export FLASK_APP=app.py
-export FLASK_ENV=production
-
-# Start the Flask application using gunicorn
-exec tini -- gunicorn --bind 0.0.0.0:5005 app:app &
+# Start the backend process
+echo "$(date +'%Y-%m-%dT%H:%M:%S%z') Starting Invoicing backend..."
+gunicorn -b 0.0.0.0:5005 --worker-class gthread --workers 3 app:app &
 backend_process=$!
 
-wait -n $backend_process $db_process
+wait $backend_process $db_process $dbgate_process $xvfb_process $dbus_process
