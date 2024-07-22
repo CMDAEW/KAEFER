@@ -1,6 +1,6 @@
 id: invoicing-app
-title: KAEFER
-version: 2.5.0
+title: Kaefer Abrechnungsanwendung
+version: 0.0.2
 release-notes: |
   Initial release of the Abrechnungsprogramm service.
 license: MIT
@@ -25,19 +25,10 @@ main:
   mounts:
     main: /root
     db: /var/lib/mysql
-  ports:
-    - internal: 5005
-      external: 80
-    - internal: 3000
-      external: 3000
 health-checks:
   web-ui:
     name: Web Interface
     success-message: The invoicing-app is accessible
-    type: script
-  dbgate:
-    name: DbGate Interface
-    success-message: DbGate is accessible
     type: script
 config:
   get:
@@ -103,20 +94,6 @@ interfaces:
       443:
         ssl: true
         internal: 5005
-    ui: true
-    protocols:
-      - tcp
-      - http
-  dbgate:
-    name: DbGate Interface
-    description: Specifies the DbGate interface to listen on for HTTP connections.
-    tor-config:
-      port-mapping:
-        3000: "3000"
-    lan-config:
-      3000:
-        ssl: false
-        internal: 3000
     ui: true
     protocols:
       - tcp
